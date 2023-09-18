@@ -1,0 +1,5 @@
+name: Designer
+version: ${version}
+main: net.deechael.designer.Designer
+bootstrapper: net.deechael.designer.DesignerBootstrapper
+api-version: "1.20"
