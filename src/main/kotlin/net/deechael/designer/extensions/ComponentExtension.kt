@@ -1,11 +1,13 @@
 package net.deechael.designer.extensions
 
 import net.deechael.designer.modules.i18n.I18nString
+import net.deechael.designer.modules.i18n.Language
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.BuildableComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentBuilder
 import net.kyori.adventure.text.ComponentLike
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEventSource
 import net.kyori.adventure.text.format.Style
@@ -295,10 +297,40 @@ internal class I18nTextComponent(
                 Style.empty()
             }
         }
+
+        fun toText(language: Language): TextComponent {
+            return Component.text(this.content!!.keyword().get(language))
+                .children(this.children)
+                .style(this.buildStyle())
+        }
+
+        fun content(content: I18nString): Builder {
+            this.content = content
+            return this
+        }
+
     }
 
 }
 
+fun Component.i18n(language: Language = Language.EN_US): Component {
+    val newComponent = (if (this is I18nTextComponent) {
+        this.toBuilder().toText(language)
+    } else {
+        this
+    }).children(listOf())
+    for (component in this.children()) {
+        newComponent.append(component.i18n(language))
+    }
+    return newComponent
+}
+
 fun text(string: I18nString): Component {
-    return I18nTextComponent.Builder().build()
+    return I18nTextComponent.Builder()
+        .content(string)
+        .build()
+}
+
+fun i18n(id: String): Component {
+    return text(I18nString(id.lowercase()))
 }

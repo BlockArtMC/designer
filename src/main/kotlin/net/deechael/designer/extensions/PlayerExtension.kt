@@ -1,8 +1,8 @@
 package net.deechael.designer.extensions
 
-import net.kyori.adventure.text.Component
+import net.deechael.designer.modules.i18n.Language
 import org.bukkit.entity.Player
 
-fun Player.sendI18n(component: Component) {
-
+fun Player.getLanguage(): Language {
+    return Language.valueOf(this.locale().toLanguageTag().replace("-", "_").uppercase())
 }

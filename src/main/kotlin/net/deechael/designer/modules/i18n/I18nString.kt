@@ -3,7 +3,17 @@ package net.deechael.designer.modules.i18n
 import net.deechael.designer.extensions.text
 import net.kyori.adventure.text.Component
 
-class I18nString(val id: String) {
+class I18nString(id: String) {
+
+    val id: String
+
+    init {
+        this.id = id.lowercase()
+    }
+
+    fun keyword(): I18nKeyword {
+        return I18nRegistry.keyword(this.id)
+    }
 
     fun asAdventure(): Component {
         return text(this)
